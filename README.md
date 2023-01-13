@@ -13,6 +13,10 @@ python MMA-RNN/main_MMECG.py
 
 ### Baseline
 
-Baseline codes are available at http://2021.icbeb.org/CPSC2021. More details can be find in our article.
+Baseline codes are available at http://2021.icbeb.org/CPSC2021. More details can be found in our article.
 
-### Pretrained models
+### Test
+
+To test the model, please use
+
+python MMA-RNN/test.py

@@ -4,7 +4,7 @@ This repo is the official implementations of MMA-RNN.
 
 ### Data 
 1. Download the original datasets from https://drive.google.com/drive/folders/1h7YlZwV714UtoM8RR47Fj3GlEC2SfHQK?usp=sharing (part 1) and https://drive.google.com/drive/folders/1AQRJC4Ib5fAUyMd4i2AYF570dbI5fioe?usp=sharing (part 2).
-2. Run data_processing.py file to segment the series and get corresponding inputs (proc_ecg_sentence_1500.npy).
+2. Run data_processing.py file to segment the series and get corresponding input (proc_ecg_sentence_1500.npy).
 
 ### Train
 To train the MMA-RNN model, please use

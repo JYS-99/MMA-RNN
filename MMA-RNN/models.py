@@ -118,17 +118,9 @@ class MMECG(nn.Module):
 
         char_features = char_outputs
         if seq_feat is not None:
-            char_features = torch.concat([char_features, seq_feat.view(seq_feat.size(0), 1, seq_feat.size(1)).repeat(1,
-                                                                                                                     char_outputs.size(
-                                                                                                                         1),
-                                                                                                                     1)],
-                                         dim=2)
+            char_features = torch.concat([char_features, seq_feat.view(seq_feat.size(0), 1, seq_feat.size(1)).repeat(1, char_outputs.size(1), 1)], dim=2)
         if ser_feat is not None:
-            char_features = torch.concat([char_features, ser_feat.view(ser_feat.size(0), 1, ser_feat.size(1)).repeat(1,
-                                                                                                                     char_outputs.size(
-                                                                                                                         1),
-                                                                                                                     1)],
-                                         dim=2)
+            char_features = torch.concat([char_features, ser_feat.view(ser_feat.size(0), 1, ser_feat.size(1)).repeat(1, char_outputs.size(1),1)], dim=2)
 
         linear_outputs_1 = self.linear(char_features)
         linear_outputs = self.dropout_layer(linear_outputs_1)

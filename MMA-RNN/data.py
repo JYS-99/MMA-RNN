@@ -19,7 +19,7 @@ class MMECG(Dataset):
 
         return {'id':self.numMat[id],
                 'ord':self.ordMat[id],
-            'dataMat': self.dataMat[id],
+                'dataMat': self.dataMat[id],
                 'labelMat': self.labelMat[id],
                 'lenMat': self.LenMat[id],
                 'seqLabelMat': self.SeqLabelMat[id]}

@@ -12,7 +12,7 @@ from sklearn.metrics import confusion_matrix as cm
 from sklearn import metrics
 from torch.utils.data import DataLoader
 import wfdb
-from utils import qrs_detect,comp_cosEn, save_dict
+from utils import save_dict
 import json
 import shutil
 import joblib
@@ -231,9 +231,7 @@ def revise(x, length, mode="same"):
     return x[:l]
 
 def challenge_entry(sample_path, revise_window, pred_1, pred_2):
-    """
-    This is our method.
-    """
+
     num = all_ids[all_ids['sample'] == sample_path].index.values[0]
     if pred_1[num] == 0:
         return {'predict_endpoints': []}
@@ -298,7 +296,6 @@ def score_calculate(seq_preds,char_preds,valid_seq_preds,valid_char_preds,epoch)
     TESTSET_PATH = './data/Training_set/Training_set_2'
     RESULT_PATH = './' + 'res'
     score_avg = score(TESTSET_PATH, RESULT_PATH)
-    # 总分，第一问，第二问
     valid_scores = [round(np.mean(score_avg[0]), 4), round(sum(score_avg[1]) / len(score_avg[1]), 4),
               round(sum(score_avg[2]) / len(score_avg[2]), 4)]
 
@@ -331,7 +328,6 @@ def score_calculate_test(test_seq_preds,test_char_preds,clf_model):
     TESTSET_PATH = './data/Training_set/Training_set_2'
     RESULT_PATH = './' + 'res'
     score_avg = score(TESTSET_PATH, RESULT_PATH)
-    # 总分，第一问，第二问
     test_scores = [round(np.mean(score_avg[0]), 4), round(sum(score_avg[1]) / len(score_avg[1]), 4),
               round(sum(score_avg[2]) / len(score_avg[2]), 4)]
 
@@ -341,26 +337,21 @@ def test_model(model, test_loader):
 
     model.train(False)
     preds = {}
-    mid_results = {}
     all_preds = []
     all_seq_preds = []
     seq_preds_list = {}
     total_correct = 0
-    total_correct_seq = 0
-    total_seq = 0
     total_samples = 0
     with torch.no_grad():
         for (idx, batch) in enumerate(test_loader):
 
-            ids, ords, inputs, targets, seq_mfcc, sen_mfcc, seq_targets, lengths = batch  # seq_targets,  seq_features,
+            ids, ords, inputs, targets, seq_targets, lengths = batch  # seq_targets,  seq_features,
 
             inputs = [input.to(device) for input in inputs]
             labels = [target.to(device) for target in targets]
-            seq_mfcc = seq_mfcc.to(device)
-            sen_mfcc = sen_mfcc.to(device)
             seq_labels = seq_targets.to(device)
             lengths = lengths.to(device)
-            char_outputs, seq_outputs, seq_length, hidden, _, _ = model(inputs, lengths, seq_mfcc, sen_mfcc)  # mask,
+            char_outputs, seq_outputs, seq_length, hidden, _, _ = model(inputs, lengths)  # mask,
 
             seq_length = seq_length.int().view(-1).cpu().numpy().tolist()
 
@@ -372,7 +363,6 @@ def test_model(model, test_loader):
             char_preds = torch.concat(char_preds, dim=0)
 
             labels = torch.concat(labels, dim=0)
-
 
             _, predictions = torch.max(char_preds, 1)
             all_preds.append(predictions)
@@ -406,17 +396,14 @@ def train_model(model, train_loader, valid_loader, criterion, seq_criterion, opt
         cnt_batch = 0
         for (idx,batch) in enumerate(train_loader):
 
-            ids, ords, inputs, targets, seq_mfcc, sen_mfcc, seq_targets, lengths = batch  # seq_targets,  seq_features,
+            ids, ords, inputs, targets, seq_targets, lengths = batch  # seq_targets,  seq_features,
             cnt_batch += 1
             inputs = [input.to(device) for input in inputs]
             labels = [target.to(device) for target in targets]
-            seq_mfcc = seq_mfcc.to(device)
-            sen_mfcc = sen_mfcc.to(device)
             seq_labels = seq_targets.to(device)
             lengths = lengths.to(device)
             optimizer.zero_grad()
-            char_outputs, seq_outputs, seq_length,  hidden, _ , _ = model(inputs, lengths, seq_mfcc, sen_mfcc) #mask,
-            # beat_outputs, seq_length = model(inputs, others, seq_features,) #seq_features,
+            char_outputs, seq_outputs, seq_length,  hidden, _ , _ = model(inputs, lengths) #mask,
 
             seq_length = seq_length.int().view(-1).cpu().numpy().tolist()
 
@@ -475,13 +462,13 @@ def train_model(model, train_loader, valid_loader, criterion, seq_criterion, opt
 
         for (idx, batch) in enumerate(valid_loader):
 
-            ids, ords, inputs, targets, seq_targets, lengths = batch  # seq_targets,  seq_features,
+            ids, ords, inputs, targets, seq_targets, lengths = batch
             inputs = [input.to(device) for input in inputs]
             labels = [target.to(device) for target in targets]
             seq_labels = seq_targets.to(device)
             lengths = lengths.to(device)
             optimizer.zero_grad()
-            char_outputs, seq_outputs, seq_length, hidden, char_alpha, word_alpha = model(inputs, lengths) #mask,
+            char_outputs, seq_outputs, seq_length, hidden, char_alpha, word_alpha = model(inputs, lengths)
 
             seq_length = seq_length.int().view(-1).cpu().numpy().tolist()
 
@@ -717,9 +704,7 @@ if __name__ == '__main__':
     seq_num_classes = 3
 
     ## about data
-    # data_dir = args.data_dir
     batch_size = 30
-    # steps = 30
 
     ## about training
     num_epochs = 40
@@ -751,7 +736,7 @@ if __name__ == '__main__':
 
     ## training
     criterion = nn.CrossEntropyLoss(reduction = 'sum')
-    seq_criterion =  nn.CrossEntropyLoss(reduction = 'sum') #CostSensitiveLoss()
+    seq_criterion =  nn.CrossEntropyLoss(reduction = 'sum')
     train_losses, valid_losses = train_model(model, train_loader, valid_loader, criterion, seq_criterion, optimizer,scheduler, args.save_dir, true_val, num_epochs=num_epochs)
     np.save(os.path.join(args.save_dir,'train_losses.npy'), np.array(train_losses))
     np.save(os.path.join(args.save_dir,'valid_losses.npy'), np.array(valid_losses))

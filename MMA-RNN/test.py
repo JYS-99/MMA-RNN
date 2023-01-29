@@ -15,7 +15,6 @@ from torch.utils.data import DataLoader
 import wfdb
 from wfdb import rdsamp,rdann
 from utils import qrs_detect,comp_cosEn, save_dict
-#import score_2021
 import json
 import shutil
 import sys
@@ -23,8 +22,6 @@ import joblib
 from sklearn.neural_network import MLPClassifier
 import scipy.io as sio
 
-## Note that: here we provide a basic solution for training and validation.
-## You can directly change it if you find something wrong or not good enough.
 
 log_name = 'log.txt'
 path_name = '.'
@@ -301,7 +298,6 @@ def score_calculate_test(test_seq_preds,test_char_preds,clf_model):
     TESTSET_PATH = data_dir +'/Training_set/Training_set_2'
     RESULT_PATH = path_name + '/' + 'res'
     score_avg = score(TESTSET_PATH, RESULT_PATH)
-    # 总分，第一问，第二问
     test_scores = [round(np.mean(score_avg[0]), 4), round(sum(score_avg[1]) / len(score_avg[1]), 4),
               round(sum(score_avg[2]) / len(score_avg[2]), 4)]
 
@@ -389,9 +385,7 @@ if __name__ == '__main__':
         # elif j[6] == 1:
         #     valid_ecg_sen[i] = j
         if j[6] == 2:
-            test_ecg_sen[i] = j
-
-
+            test_ecg_sen[i] = j # test set
 
     seq_index_test = list(test_ecg_sen.keys())
 

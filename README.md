@@ -1,6 +1,7 @@
 # MMA-RNN: A Multi-level Multi-task Attention-based Recurrent Neural Network for Discrimination and Localization of Atrial Fibrillation
 
 This repo is the official implementations of MMA-RNN. 
+https://arxiv.org/abs/2302.03731
 
 ### Data 
 1. Download the original datasets from https://drive.google.com/drive/folders/1h7YlZwV714UtoM8RR47Fj3GlEC2SfHQK?usp=sharing (part 1) and https://drive.google.com/drive/folders/1AQRJC4Ib5fAUyMd4i2AYF570dbI5fioe?usp=sharing (part 2).

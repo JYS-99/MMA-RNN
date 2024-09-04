@@ -3,7 +3,7 @@
 This repo is the official implementations of [MMA-RNN](https://www.sciencedirect.com/science/article/abs/pii/S1746809423011801). 
 
 ### Data 
-1. Download the original datasets from https://drive.google.com/drive/folders/1h7YlZwV714UtoM8RR47Fj3GlEC2SfHQK?usp=sharing (part 1) and https://drive.google.com/drive/folders/1AQRJC4Ib5fAUyMd4i2AYF570dbI5fioe?usp=sharing (part 2).
+1. Download the original datasets from this [link](https://drive.google.com/drive/folders/1Rm7Ba5HAHDxPeKHOR9wK5TSG2gyb01L9?usp=sharing, https://drive.google.com/drive/folders/1hpoijWP5EsKyarubKY00d4rT0EDQJLou?usp=sharing).
 2. Run data_processing.py file to segment the series and get corresponding input (proc_ecg_sentence_1500.npy).
 
 ### Train
